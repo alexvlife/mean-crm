@@ -1,0 +1,17 @@
+{
+  "name": "mean-crm",
+  "version": "1.0.0",
+  "description": "Fullstack app based on MEAN",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "keywords": [
+    "MongoDB",
+    "Express",
+    "Angular",
+    "NodeJS"
+  ],
+  "author": "AlexV",
+  "license": "ISC"
+}

@@ -4,7 +4,8 @@
   "description": "Fullstack app based on MEAN",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "server": "nodemon index"
   },
   "keywords": [
     "MongoDB",
@@ -13,5 +14,11 @@
     "NodeJS"
   ],
   "author": "AlexV",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
 }

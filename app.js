@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const passport = require('passport');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan'); // HTTP request logger middleware
@@ -16,6 +17,10 @@ const app = express();
 mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, })
   .then(() => console.log('MongoDB connected.'))
   .catch(error => console.log('ERROR by MongoDB connection:', error));
+
+// add passport.js
+app.use(passport.initialize());
+require('./middleware/passport')(passport);
 
 // for HTTP request logging
 app.use(morgan('dev'));

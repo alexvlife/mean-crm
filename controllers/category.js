@@ -1,5 +1,6 @@
 module.exports.getAll = function(req, res) {
-
+  // mock for test
+  res.json({ message: 'Categories' });
 }
 
 module.exports.getById = function(req, res) {

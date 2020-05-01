@@ -4,6 +4,7 @@ const errorHandler = require('../utils/errorHandler');
 
 module.exports.getByCategoryId = async function(req, res) {
   try {
+    // Search positions that created by current user
     const positions = await Position.find({
       category: req.params.categoryId,
       user: req.user.id // user data comes from /middleware/passport, see - done(null, user)

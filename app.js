@@ -25,6 +25,11 @@ require('./middleware/passport')(passport);
 // for HTTP request logging
 app.use(morgan('dev'));
 
+// to get images from server,
+// when client request to /uploads - directly from the browser's address bar
+// example: http://localhost:5000/uploads/20200501-181126_174-image-name.png
+app.use('/uploads', express.static('uploads'));
+
 // for the Express, to parsing the req.body properties as JS-objects
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());

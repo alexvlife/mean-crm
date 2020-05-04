@@ -17,8 +17,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(): void {
-    // TODO: write logic.
+  register(user: IUser): Observable<IUser> {
+    return this.http.post<IUser>('/api/auth/register', user);
   }
 
   login(user: IUser): Observable<ILoginResponse> {

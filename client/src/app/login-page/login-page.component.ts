@@ -14,7 +14,8 @@ import { IUser } from '../shared/interfaces';
 })
 export class LoginPageComponent implements OnInit, OnDestroy {
   form: FormGroup;
-  authSubscription: Subscription
+  authSubscription: Subscription;
+  routeSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -24,23 +25,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-
-    this.route.queryParams.subscribe((params: Params) => {
-      if (params['registered']) {
-        // TODO: write logic (after creating MessageService)
-        // Now you can logIn, using your data.
-
-      } else if (params['accessDenied']) {
-        // TODO: write logic (after creating MessageService)
-        // First you need to logIn.
-      }
-    });
+    this.subscribeToRouteQueryParams();
   }
 
   ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.clearSubscriptions();
   }
 
   get isEmailControlValueError(): boolean {
@@ -87,5 +76,28 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)])
     });
+  }
+
+  private subscribeToRouteQueryParams(): void {
+    this.routeSubscription = this.route.queryParams.subscribe((params: Params) => {
+      if (params['registered']) {
+        // TODO: write logic (after creating MessageService)
+        // Now you can logIn, using your data.
+
+      } else if (params['accessDenied']) {
+        // TODO: write logic (after creating MessageService)
+        // First you need to logIn.
+      }
+    });
+  }
+
+  private clearSubscriptions(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 }

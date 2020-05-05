@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../shared/services/auth.service';
+import { MaterialService } from '../shared/services/material.service';
 import { IUser } from '../shared/interfaces';
 
 @Component({
@@ -63,7 +64,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         // this.router.navigate(['/overview']);
       },
       error => {
-        console.warn('Login error:', error);
+        MaterialService.toast(error?.error?.message || 'Error by login.');
         this.form.enable();
       },
     );
@@ -81,12 +82,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   private subscribeToRouteQueryParams(): void {
     this.routeSubscription = this.route.queryParams.subscribe((params: Params) => {
       if (params['registered']) {
-        // TODO: write logic (after creating MessageService)
-        // Now you can logIn, using your data.
-
+        MaterialService.toast('Now you can logIn, using your data.');
       } else if (params['accessDenied']) {
-        // TODO: write logic (after creating MessageService)
-        // First you need to logIn.
+        MaterialService.toast('First you need to register.');
       }
     });
   }

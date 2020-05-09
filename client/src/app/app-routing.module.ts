@@ -7,6 +7,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { AnalyticsPageComponent } from './analytics-page/analytics-page.component';
 import { CategoriesPageComponent } from './categories-page/categories-page.component';
+import { CategoriesFormComponent } from './categories-page/categories-form/categories-form.component';
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { OrderPageComponent } from './order-page/order-page.component';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
@@ -27,6 +28,8 @@ const routes: Routes = [
       { path: 'history', component: HistoryPageComponent },
       { path: 'order', component: OrderPageComponent },
       { path: 'categories', component: CategoriesPageComponent },
+      { path: 'categories/new', component: CategoriesFormComponent },
+      { path: 'categories/:id', component: CategoriesFormComponent },
     ]
   }
 ];

@@ -15,6 +15,7 @@ import { CategoriesPageComponent } from './categories-page/categories-page.compo
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { OrderPageComponent } from './order-page/order-page.component';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { TokenInterceptor } from './shared/interceptors/token.interceptor';
     HistoryPageComponent,
     OrderPageComponent,
     OverviewPageComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,

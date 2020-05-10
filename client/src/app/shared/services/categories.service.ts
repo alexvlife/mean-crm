@@ -16,4 +16,25 @@ export class CategoriesService {
   getById(id: string): Observable<ICategory> {
     return this.http.get<ICategory>(`/api/category/${id}`);
   }
+
+  create(name: string, image?: File): Observable<ICategory> {
+    const data: FormData = this.generateDataForCreateAndUpdateRequest(name, image);
+    return this.http.post<ICategory>('/api/category', data);
+  }
+
+  update(id: string, name: string, image?: File): Observable<ICategory> {
+    const data: FormData = this.generateDataForCreateAndUpdateRequest(name, image);
+    return this.http.patch<ICategory>(`/api/category/${id}`, data);
+  }
+
+  private generateDataForCreateAndUpdateRequest(name: string, image?: File): FormData {
+    const data: FormData = new FormData();
+    data.append('name', name);
+
+    if (image) {
+      data.append('image', image, image.name);
+    }
+
+    return data;
+  }
 }

@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subscription, of } from 'rxjs';
+import { of, Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CategoriesService } from '../../shared/services/categories.service';
 import { MaterialService } from '../../shared/services/material.service';
@@ -13,10 +13,16 @@ import { ICategory } from '../../shared/interfaces';
   styleUrls: ['./categories-form.component.css']
 })
 export class CategoriesFormComponent implements OnInit, OnDestroy {
-  form: FormGroup;
-  isNew: boolean = true;
+  @ViewChild('input') inputRef: ElementRef;
 
-  private _routeParamsSubscription: Subscription;
+  isNew: boolean = true;
+  form: FormGroup;
+  image: File;
+  imagePreview: string | ArrayBuffer | null = '';
+
+  existCategory: ICategory;
+
+  private _streamsSubscription: Subscription;
 
   constructor(
     private categoriesService: CategoriesService,
@@ -49,8 +55,44 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
     return this.form?.get(formControlName)?.invalid && this.form?.get(formControlName)?.touched;
   }
 
-  onSubmit(): void {
+  triggerClick(): void {
+    this.inputRef.nativeElement.click();
+  }
 
+  onFileUpload(evt: any): void {
+    const file = evt.target.files[0];
+    this.image = file;
+
+    // For show image preview
+    const reader: FileReader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  onSubmit(): void {
+    this.form.disable();
+
+    const stream$: Observable<ICategory> = this.isNew
+      ? this.categoriesService.create(this.form.value.name, this.image)
+      : this.categoriesService.update(this.existCategory._id, this.form.value.name, this.image);
+
+    const streamSubscription: Subscription = stream$.subscribe(
+      (category: ICategory) => {
+        const successMessage: string = this.isNew ? 'Создана новая категория' : 'Изменения сохранены';
+        this.existCategory = category;
+        MaterialService.toast(successMessage);
+        this.form.enable();
+      },
+      error => {
+        MaterialService.toast(error?.error?.message);
+        this.form.enable();
+      }
+    );
+
+    this._streamsSubscription.add(streamSubscription);
   }
 
   private initForm(): void {
@@ -62,7 +104,7 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToRouteParams(): void {
-    this._routeParamsSubscription = this.route.params.pipe(
+    this._streamsSubscription = this.route.params.pipe(
       switchMap(
         (params: Params) => {
           const categoryId: string = params['id'];
@@ -79,9 +121,12 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
     ).subscribe(
       (category: ICategory) => {
         if (category) {
+          this.existCategory = category;
           this.form.patchValue({
             name: category.name
           });
+
+          this.imagePreview = category.imageSrc;
           MaterialService.updateTextInputs();
         }
 
@@ -92,8 +137,9 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
   }
 
   private clearSubscription(): void {
-    if (this._routeParamsSubscription) {
-      this._routeParamsSubscription.unsubscribe();
+    if (this._streamsSubscription) {
+      this._streamsSubscription.unsubscribe();
+      this._streamsSubscription = null;
     }
   }
 }

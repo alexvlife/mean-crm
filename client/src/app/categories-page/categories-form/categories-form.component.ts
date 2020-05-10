@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { of, Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CategoriesService } from '../../shared/services/categories.service';
 import { MaterialService } from '../../shared/services/material.service';
-import { ICategory } from '../../shared/interfaces';
+import { ICategory, IResponseMessage } from '../../shared/interfaces';
 
 @Component({
   selector: 'app-categories-form',
@@ -26,7 +26,8 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private categoriesService: CategoriesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   get title(): string {
@@ -59,6 +60,18 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
     this.inputRef.nativeElement.click();
   }
 
+  deleteCategory(): void {
+    const decision: boolean = window.confirm(`Вы уверены, что хотите удалить категорию "${this.existCategory.name}"?`);
+
+    if (decision) {
+      this.categoriesService.delete(this.existCategory._id).subscribe(
+        (response: IResponseMessage) => MaterialService.toast(response?.message || ''),
+        error => MaterialService.toast(error?.error?.message || 'Ошибка при удалении категории'),
+        () => this.router.navigate(['/categories'])
+      );
+    }
+  }
+
   onFileUpload(evt: any): void {
     const file = evt.target.files[0];
     this.image = file;
@@ -87,7 +100,8 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
         this.form.enable();
       },
       error => {
-        MaterialService.toast(error?.error?.message);
+        const action: string = this.isNew ? 'создании' : 'изменении';
+        MaterialService.toast(error?.error?.message || `Ошибка при ${action} категории`);
         this.form.enable();
       }
     );
@@ -132,7 +146,7 @@ export class CategoriesFormComponent implements OnInit, OnDestroy {
 
         this.form.enable();
       },
-      error => MaterialService.toast(error?.error?.message)
+      error => MaterialService.toast(error?.error?.message || 'Ошибка при получении категории')
     );
   }
 

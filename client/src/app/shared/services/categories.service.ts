@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ICategory } from '../interfaces';
+import { ICategory, IResponseMessage } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,10 @@ export class CategoriesService {
   update(id: string, name: string, image?: File): Observable<ICategory> {
     const data: FormData = this.generateDataForCreateAndUpdateRequest(name, image);
     return this.http.patch<ICategory>(`/api/category/${id}`, data);
+  }
+
+  delete(id: string): Observable<IResponseMessage> {
+    return this.http.delete<IResponseMessage>(`/api/category/${id}`);
   }
 
   private generateDataForCreateAndUpdateRequest(name: string, image?: File): FormData {

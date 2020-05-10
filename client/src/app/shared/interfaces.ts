@@ -9,3 +9,7 @@ export interface ICategory {
   user?: string;
   _id?: string;
 }
+
+export interface IResponseMessage {
+  message: string;
+}

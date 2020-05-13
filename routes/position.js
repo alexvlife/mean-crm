@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 // localhost:5000/api/position/:category
-router.get('/:categoryid', passport.authenticate('jwt', { session: false }), controller.getByCategoryId);
+router.get('/:categoryId', passport.authenticate('jwt', { session: false }), controller.getByCategoryId);
 
 // localhost:5000/api/position
 router.post('/', passport.authenticate('jwt', { session: false }), controller.create);

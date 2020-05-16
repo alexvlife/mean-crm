@@ -16,6 +16,7 @@ export interface IPosition {
   category: string;
   user?: string;
   _id?: string;
+  quantity?: number; // for use on Frontend only
 }
 
 export interface IResponseMessage {

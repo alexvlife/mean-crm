@@ -26,8 +26,9 @@ export class OrderService {
     this.updateTotalPriceAfterRemove(orderPosition);
   }
 
-  clear() {
-    // TODO: add logic
+  clear(): void {
+    this.list = [];
+    this.totalPrice = 0;
   }
 
   updateTotalPriceAfterAdd(orderPosition: IOrderPosition): void {

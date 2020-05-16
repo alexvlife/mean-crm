@@ -12,7 +12,8 @@ import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IMaterialInstance, MaterialService } from '../shared/services/material.service';
-import { IOrderPosition } from '../shared/interfaces';
+import { OrdersService } from '../shared/services/orders.service';
+import { IOrder, IOrderPosition } from '../shared/interfaces';
 import { OrderService } from './order.service';
 
 @Component({
@@ -27,12 +28,14 @@ export class OrderPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isRoot: boolean;
   modal: IMaterialInstance;
+  createOrderPending: boolean = false;
 
   private _componentDestroy: Subject<any> = new Subject();
 
   constructor(
     private cdr: ChangeDetectorRef,
     private orderService: OrderService,
+    private ordersService: OrdersService,
     private router: Router,
   ) {}
 
@@ -77,7 +80,30 @@ export class OrderPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   confirmComplete(): void {
-    this.modal.close();
+    this.createOrderPending = true;
+
+    const order: IOrder = {
+      list: this.orderPositionList.map((orderPosition: IOrderPosition): IOrderPosition => {
+        delete orderPosition._id;
+        return orderPosition;
+      }),
+    }
+
+    this.ordersService.create(order)
+      .pipe(takeUntil(this._componentDestroy))
+      .subscribe(
+        (orderResponse: IOrder) => {
+          MaterialService.toast(`Заказ №${orderResponse.order} был добавлен.`);
+          this.orderService.clear();
+        },
+        (error) => {
+          MaterialService.toast(error?.error?.message || 'Ошибка при создании заказа')
+        },
+        () => {
+          this.modal.close();
+          this.createOrderPending = false;
+        }
+      );
   }
 
   private clearSubscriptions(): void {

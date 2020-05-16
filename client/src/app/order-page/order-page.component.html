@@ -55,7 +55,8 @@
     <button
       type="button"
       class="modal-action waves-effect waves-black btn-flat"
-      (click)="cancelComplete()">
+      (click)="cancelComplete()"
+      [disabled]="createOrderPending">
       Отмена
     </button>
 
@@ -63,7 +64,7 @@
       type="button"
       class="modal-action btn waves-effect"
       (click)="confirmComplete()"
-      [disabled]="!orderPositionList.length">
+      [disabled]="!orderPositionList.length || createOrderPending">
       Подтвердить
     </button>
   </div>

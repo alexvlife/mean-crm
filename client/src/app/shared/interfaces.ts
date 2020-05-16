@@ -31,7 +31,7 @@ export interface IOrderPosition {
   name: string;
   cost: number;
   quantity?: number;
-  _id?: string;
+  _id?: string; // for use on Frontend only (don't send to backend)
 }
 
 export interface IResponseMessage {

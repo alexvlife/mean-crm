@@ -16,6 +16,8 @@ import { CategoriesFormComponent } from './categories-page/categories-form/categ
 import { PositionsFormComponent } from './categories-page/categories-form/positions-form/positions-form.component';
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { OrderPageComponent } from './order-page/order-page.component';
+import { OrderCategoriesComponent } from './order-page/order-categories/order-categories.component';
+import { OrderPositionsComponent } from './order-page/order-positions/order-positions.component';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
@@ -33,6 +35,8 @@ import { TokenInterceptor } from './shared/interceptors/token.interceptor';
     PositionsFormComponent,
     HistoryPageComponent,
     OrderPageComponent,
+    OrderCategoriesComponent,
+    OrderPositionsComponent,
     OverviewPageComponent,
     LoaderComponent,
   ],

@@ -19,6 +19,21 @@ export interface IPosition {
   quantity?: number; // for use on Frontend only
 }
 
+export interface IOrder {
+  list: IOrderPosition[];
+  order?: number;
+  date?: Date;
+  user?: string;
+  _id?: string;
+}
+
+export interface IOrderPosition {
+  name: string;
+  cost: number;
+  quantity?: number;
+  _id?: string;
+}
+
 export interface IResponseMessage {
   message: string;
 }

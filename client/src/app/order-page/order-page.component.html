@@ -8,8 +8,10 @@
   </h4>
 
   <button
+    type="button"
     class="waves-effect btn grey darken-1"
-    (click)="complete()">
+    (click)="complete()"
+    [disabled]="!orderPositionList.length">
     Завершить
   </button>
 </div>
@@ -31,29 +33,21 @@
         </thead>
 
         <tbody>
-          <tr>
-            <td>Alvin</td>
-            <td>3</td>
-            <td>$0.87</td>
-            <td><i class="material-icons pointer">delete</i></td>
-          </tr>
-          <tr>
-            <td>Alan</td>
-            <td>1</td>
-            <td>$3.76</td>
-            <td><i class="material-icons pointer">delete</i></td>
-          </tr>
-          <tr>
-            <td>Jonathan</td>
-            <td>2</td>
-            <td>$7.00</td>
-            <td><i class="material-icons pointer">delete</i></td>
+          <tr *ngFor="let orderPosition of orderPositionList">
+            <td>{{ orderPosition.name }}</td>
+            <td>{{ orderPosition.quantity }}</td>
+            <td>{{ orderPosition.cost }} руб.</td>
+            <td>
+              <i
+                class="material-icons pointer"
+                (click)="removeOrderPosition(orderPosition)">delete</i>
+            </td>
           </tr>
         </tbody>
       </table>
 
       <div class="order-summary">
-        <p>Общая стоимость <strong>22 231 руб.</strong></p>
+        <p>Общая стоимость <strong>{{ orderPositionTotalPrice }} руб.</strong></p>
       </div>
   </div>
 
@@ -68,7 +62,8 @@
     <button
       type="button"
       class="modal-action btn waves-effect"
-      (click)="confirmComplete()">
+      (click)="confirmComplete()"
+      [disabled]="!orderPositionList.length">
       Подтвердить
     </button>
   </div>

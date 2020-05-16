@@ -2,8 +2,10 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
+import { MaterialService } from '../../shared/services/material.service';
 import { PositionsService } from '../../shared/services/positions.service';
 import { IPosition } from '../../shared/interfaces';
+import { OrderService } from '../order.service';
 
 const POSITION_QUANTITY_DEFAULT: number = 1;
 
@@ -16,14 +18,19 @@ const POSITION_QUANTITY_DEFAULT: number = 1;
 export class OrderPositionsComponent implements OnInit {
   positions$: Observable<IPosition[]>
 
-  constructor(private route: ActivatedRoute, private positionsService: PositionsService) {}
+  constructor(
+    private orderService: OrderService,
+    private positionsService: PositionsService,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
     this.getPositions();
   }
 
   addToOrder(position: IPosition): void {
-    // TODO: add logic
+    MaterialService.toast(`Добавлено x ${position.quantity}`);
+    this.orderService.add(position);
   }
 
   private getPositions(): void {

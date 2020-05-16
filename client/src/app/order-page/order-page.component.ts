@@ -12,11 +12,14 @@ import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IMaterialInstance, MaterialService } from '../shared/services/material.service';
+import { IOrderPosition } from '../shared/interfaces';
+import { OrderService } from './order.service';
 
 @Component({
   selector: 'app-order-page',
   templateUrl: './order-page.component.html',
   styleUrls: ['./order-page.component.css'],
+  providers: [OrderService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrderPageComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -27,7 +30,19 @@ export class OrderPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _componentDestroy: Subject<any> = new Subject();
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private orderService: OrderService,
+    private router: Router,
+  ) {}
+
+  get orderPositionList(): IOrderPosition[] {
+    return this.orderService.list;
+  }
+
+  get orderPositionTotalPrice(): number {
+    return this.orderService.totalPrice;
+  }
 
   ngOnInit(): void {
     this.router.events
@@ -47,6 +62,10 @@ export class OrderPageComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.modal.destroy();
     this.clearSubscriptions();
+  }
+
+  removeOrderPosition(orderPosition: IOrderPosition): void {
+    this.orderService.remove(orderPosition);
   }
 
   complete(): void {

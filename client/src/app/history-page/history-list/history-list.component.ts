@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IOrder } from 'src/app/shared/interfaces';
 
 @Component({
   selector: 'app-history-list',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./history-list.component.css']
 })
 export class HistoryListComponent {
-
+  @Input() orders: IOrder[];
 }

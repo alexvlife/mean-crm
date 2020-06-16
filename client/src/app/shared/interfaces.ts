@@ -37,3 +37,9 @@ export interface IOrderPosition {
 export interface IResponseMessage {
   message: string;
 }
+
+export interface IHistoryFilter {
+  start?: Date;
+  end?: Date;
+  order?: number;
+}

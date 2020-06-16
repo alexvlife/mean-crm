@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@ang
 import { Subscription } from 'rxjs';
 import { IMaterialInstance, MaterialService } from '../shared/services/material.service';
 import { OrdersService } from '../shared/services/orders.service';
-import { IOrder } from '../shared/interfaces';
+import { IHistoryFilter, IOrder } from '../shared/interfaces';
 
 const STEP: number = 2; // Кол-во объектов данных для загрузки в одной запросе.
 
@@ -16,6 +16,7 @@ export class HistoryPageComponent implements AfterViewInit, OnDestroy {
   isFilterVisible: boolean = false;
   tooltip: IMaterialInstance;
   orders: IOrder[] = [];
+  filter: IHistoryFilter = {};
 
   offset: number = 0;
   limit: number = STEP;
@@ -52,11 +53,23 @@ export class HistoryPageComponent implements AfterViewInit, OnDestroy {
     this.fetch();
   }
 
+  applyFilter(filter: IHistoryFilter): void {
+    this.orders = [];
+    this.offset = 0;
+    this.filter = filter;
+    this.initialOrdersLoading = true;
+    this.fetch();
+  }
+
+  isFiltered(): boolean {
+    return Object.keys(this.filter).length !== 0;
+  }
+
   private fetch(): void {
-    const params = {
+    const params = Object.assign({}, this.filter, {
       offset: this.offset,
       limit: this.limit,
-    };
+    });
 
     this.streamSub = this.ordersService.fetch(params).subscribe(
       (orders: IOrder[]) => {

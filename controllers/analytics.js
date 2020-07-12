@@ -61,8 +61,29 @@ module.exports.overview = async function(req, res) {
   }
 }
 
-module.exports.analytics = function(req, res) {
+module.exports.analytics = async function(req, res) {
+  try {
+    const allOrders = await Order.find({ user: req.user.id }).sort({ date: 1 });
+    const ordersMap = getOrdersMap(allOrders);
 
+    /** Средний чек */
+    const average = +(calculatePrice(allOrders) / Object.keys(ordersMap).length).toFixed(2);
+
+    /** Формируем объект, где будут храниться данные для графиков */
+    /** - формируем ось Х (те дни, в которые были совершены определенные заказы) */
+    const chart = Object.keys(ordersMap).map(label => {
+      // Формат label - 12.07.2020
+
+      const ordersByDay = ordersMap[label]; // Заказы за данный день
+      const order = ordersByDay.length; // Кол-во заказов в данный день
+      const gain = calculatePrice(ordersByDay); // Выручка для определенного дня
+      return { label, order, gain }
+    });
+
+    res.status(200).json({average, chart});
+  } catch (e) {
+    errorhandler(res, e);
+  }
 }
 
 /**

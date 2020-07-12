@@ -43,3 +43,15 @@ export interface IHistoryFilter {
   end?: Date;
   order?: number;
 }
+
+export interface IOverviewPage {
+  gain: IOverviewPageItem;
+  orders: IOverviewPageItem;
+}
+
+export interface IOverviewPageItem {
+  percent: number;
+  compare: number;
+  yesterday: number;
+  isHigher: boolean;
+}
